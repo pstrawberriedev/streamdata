@@ -1,6 +1,5 @@
 var fs = require('fs');
 var moment = require('moment');
-var cron = require('cron');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -63,14 +62,36 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-var momentNow = moment().format('dddd MMMM Do YYYY'); //Monday, Dec 21st 2015
 
-var printStuff = '## ' + momentNow + '\r\n' + 'stuff' + '\r\n' + 'stuff';
+//Output Date
+function outputDate() {
+  var currentDate = moment().format('MM/DD/YY'); //Monday, Dec 21st 2015
+  fs.writeFile("./data/date.txt", currentDate, function(err) {
+      if(err) {return console.log(err);}
+      console.log("Date Updated");
+  });
+}
+//Output Time
+function outputTime() {
+  var currentTime = moment().format('h:mm a');
+  fs.writeFile("./data/time.txt", currentTime, function(err) {
+      if(err) {return console.log(err);}
+      console.log("Time Updated");
+  });
+}
 
-fs.writeFile("./data/test.txt", printStuff, function(err) {
-    if(err) {
-        return console.log(err);
-    }
-
-    console.log("File Saved");
-});
+//Cron Tasks
+var CronJob = require('cron').CronJob;
+var job = new CronJob('* * * * *', function() {
+  //Run Every Minute
+  console.log('Cron Tick (1min)');
+  outputTime();
+  outputDate();
+  }, function () {
+    console.log('*******************');
+    console.log('Cron Stopped!');
+    console.log('*******************');
+  },
+  true, /* Start the job right now */
+  'America/Denver' /* Time zone of this job. */
+);
