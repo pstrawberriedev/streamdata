@@ -1,5 +1,6 @@
 var fs = require('fs');
 var moment = require('moment');
+var CronJob = require('cron').CronJob;
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -80,13 +81,19 @@ function outputTime() {
   });
 }
 
+//Initial Population
+console.log('++++++++++++++++++++++++++++++');
+console.log('Cron Started');
+console.log('++++++++++++++++++++++++++++++');
+outputDate();
+outputTime();
+
 //Cron Tasks
-var CronJob = require('cron').CronJob;
-var job = new CronJob('* * * * *', function() {
-  //Run Every Minute
-  console.log('Cron Tick (1min)');
-  outputTime();
+var job = new CronJob('*/30 * * * * *', function() {
+  //Run Every 30 Seconds
+  console.log('Tick');
   outputDate();
+  outputTime();
   }, function () {
     console.log('*******************');
     console.log('Cron Stopped!');
