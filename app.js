@@ -69,7 +69,7 @@ function outputDate() {
   var currentDate = moment().format('MM/DD/YY'); //Monday, Dec 21st 2015
   fs.writeFile("./data/date.txt", currentDate, function(err) {
       if(err) {return console.log(err);}
-      console.log("Date Updated");
+      console.log(currentDate);
   });
 }
 //Output Time
@@ -77,7 +77,7 @@ function outputTime() {
   var currentTime = moment().format('h:mm a');
   fs.writeFile("./data/time.txt", currentTime, function(err) {
       if(err) {return console.log(err);}
-      console.log("Time Updated");
+      console.log(currentTime);
   });
 }
 
@@ -91,7 +91,6 @@ outputTime();
 //Cron Tasks
 var job = new CronJob('*/30 * * * * *', function() {
   //Run Every 30 Seconds
-  console.log('Tick');
   outputDate();
   outputTime();
   }, function () {
